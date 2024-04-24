@@ -75,84 +75,81 @@ public class DateUtilTest {
 	    Assert.assertEquals(2023, date.getYear());
 	}
 	
-	/*
-	 * Write tests for rest months of year 2024.
-	 */
+	// Equivalence Class Testing
 	@Test
-	public void testIncrementFromDecember15ToDecember16() {
-		DateUtil date = new DateUtil(15, 12, 1994);
-	    System.out.println("December15houldIncrementToDecember16 >" + date);
-	    date.increment();
-	    System.out.println(date);
-	    Assert.assertEquals(12, date.getMonth());
-	    Assert.assertEquals(16, date.getDay());
-	    Assert.assertEquals(1994, date.getYear());
-	}
-	
-	@Test 
-	//leap year
-	public void testLeapYearFebruary28ShouldIncrementToFebruary29() {
-		DateUtil date = new DateUtil(28, 2, 2024);
-	    System.out.println("February28ShouldIncrementToFebruary29 >" + date);
-	    date.increment();
-	    System.out.println(date);
-	    Assert.assertEquals(2, date.getMonth());
-	    Assert.assertEquals(29, date.getDay());
-	}
+    public void testCommonDaysIncrementAndDecrement() { 
+        //D1 class testing (Days 1-28 (common to all months))
+        for (int day = 1; day <= 28; day++) {
+            DateUtil date = new DateUtil(day, 3, 2024);
+            date.increment();
+            Assert.assertEquals(day + 1, date.getDay());
+            date.decrement();
+            Assert.assertEquals(day, date.getDay());
+        }
+    }
 	
 	@Test
-	public void testInvalidYearLowerBoundary() {
-	    new DateUtil(1, 1, 1699); 
+    public void testDay29IncrementAndDecrement() {
+        //D2 class testing (Day 29 (applicable only in February and months with 30 days))
+        DateUtil leapFeb = new DateUtil(29, 2, 2024);
+        leapFeb.increment();
+        Assert.assertEquals(1, leapFeb.getDay());
+        Assert.assertEquals(3, leapFeb.getMonth());
+        leapFeb.decrement();
+        Assert.assertEquals(29, leapFeb.getDay());
+        Assert.assertEquals(2, leapFeb.getMonth());
 	}
+	
+	@Test
+    public void testDay30IncrementAndDecrement() {
+        //D3 class testing (Day 30 (not applicable to February))
+        DateUtil april30 = new DateUtil(30, 4, 2024);
+        april30.increment();
+        Assert.assertEquals(1, april30.getDay());
+        Assert.assertEquals(5, april30.getMonth());
+        april30.decrement();
+        Assert.assertEquals(30, april30.getDay());
+        Assert.assertEquals(4, april30.getMonth());
+    }
 
 	@Test
-	public void testInvalidYearUpperBoundary() {
-	    new DateUtil(31, 12, 2025); 
-	}
+    public void testDay31IncrementAndDecrement() {
+        //D4 class testing (Day 31 (applicable only to months with 31 days))
+        DateUtil jan31 = new DateUtil(31, 1, 2024);
+        jan31.increment();
+        Assert.assertEquals(1, jan31.getDay());
+        Assert.assertEquals(2, jan31.getMonth());
+        jan31.decrement();
+        Assert.assertEquals(31, jan31.getDay());
+        Assert.assertEquals(1, jan31.getMonth());
+    }
 
 	@Test
 	public void testFebruaryNonLeapYear() {
+		// invalid date (leap year)
 	    new DateUtil(29, 2, 2023); 
 	}
 	
-	//Apr, Jun, Sep, Nov have date 30.
 	@Test
-    public void test30DaysMonthsAprilJuneSeptemberNovember30() {
-        DateUtil dateApril = new DateUtil(30, 4, 2024);
-        Assert.assertEquals("30 April 2024", dateApril.toString());
-        DateUtil dateJune = new DateUtil(30, 6, 2024);
-        Assert.assertEquals("30 June 2024", dateJune.toString());
-        DateUtil dateSeptember = new DateUtil(30, 9, 2024);
-        Assert.assertEquals("30 September 2024", dateSeptember.toString());
-        DateUtil dateNovember = new DateUtil(30, 11, 2024);
-        Assert.assertEquals("30 November 2024", dateNovember.toString());
-    }
-	
-	//Apr, Jun, Sep, Nov haven't date 31.
-	@Test
-    public void test30DaysMonthsAprilJuneSeptemberNovember31() {
+	public void testInvalidDateApril31() {
+        // invalid date (month without 31 days)
         new DateUtil(31, 4, 2024);
-        new DateUtil(31, 6, 2024);
-        new DateUtil(31, 9, 2024);
-        new DateUtil(31, 11, 2024);
+    }
+    
+	@Test
+    public void testNonLeapYear() {
+        //Y1 class testing (non-leap year)
+        DateUtil commonYearFeb = new DateUtil(28, 2, 2023);
+        commonYearFeb.increment();
+        Assert.assertEquals(1, commonYearFeb.getDay());
+        Assert.assertEquals(3, commonYearFeb.getMonth());
     }
 	
-	//Jan, Mar, May, Jul, Aug, Oct, Dec have data 31.
-	@Test
-    public void test31DaysMonthsJanuaryMarchMayJulyAugustOctoberDecember31() {
-        DateUtil dateJanuary = new DateUtil(31, 1, 2024);
-        Assert.assertEquals("31 January 2024", dateJanuary.toString());
-        DateUtil dateMarch = new DateUtil(31, 3, 2024);
-        Assert.assertEquals("31 March 2024", dateMarch.toString());
-        DateUtil dateMay = new DateUtil(31, 5, 2024);
-        Assert.assertEquals("31 May 2024", dateMay.toString());
-        DateUtil dateJuly = new DateUtil(31, 7, 2024);
-        Assert.assertEquals("31 July 2024", dateJuly.toString());
-        DateUtil dateAugust = new DateUtil(31, 8, 2024);
-        Assert.assertEquals("31 August 2024", dateAugust.toString());
-        DateUtil dateOctober = new DateUtil(31, 10, 2024);
-        Assert.assertEquals("31 October 2024", dateOctober.toString());
-        DateUtil dateDecember = new DateUtil(31, 12, 2024);
-        Assert.assertEquals("31 December 2024", dateDecember.toString());
-    }
+	public void testLeapYear() {
+		//Y2 class testing (leap year)
+		DateUtil leapYearFeb = new DateUtil(28, 2, 2024);
+		leapYearFeb.increment();
+		Assert.assertEquals(29, leapYearFeb.getDay());
+		Assert.assertEquals(2, leapYearFeb.getMonth());
+	}
 }
